@@ -29,6 +29,9 @@ class Models(WebTest):
 
 
 class Views(WebTest):
-    def test_index(self):
-        response = self.app.get(reverse('access_log_index'))
-        response.mustcontain('Hello World')
+    def test_downloads(self):
+        response = self.app.get(reverse('access_log_downloads', args=[1]))
+        response.mustcontain('table')
+
+        response = self.app.get(reverse('access_log_downloads', args=[1, 2]))
+        response.mustcontain('table')
