@@ -1,6 +1,6 @@
 # Overview
 
-Track and generate statistics for of user access to your Django model instances in your project.
+Track and generate statistics for user access to your Django model instances in your project.
 
 ## Table of Contents
 
@@ -16,6 +16,32 @@ Install the app into your virtualenv:
 Update your settings module:
 
     INSTALLED_APPS += ('access_log', )
+
+Update your urls.py:
+
+    url(r'^access_log/', include('access_log.urls')),
+
+## Usage
+
+Use the ``log_access`` decorator in your view function. The decorator expects a keyword argument ``model`` to be set to your model class. The associated ``pk`` value for an instance of the model must be supplied as part of the arguments in your view function.
+
+    from access_log.decorators import log_access
+
+    @log_access(model=MyModel)
+    @login_required
+    def view_func(request, pk):
+        # Do something to render the model instance for authenticated user.
+
+To access the statistics for your model:
+
+    >>> from django.contrib.contenttypes.models import ContentType
+    >>> from access_log.models import AccessLog
+    >>> content_type = ContentType.objects.get_for_model(MyModel)
+    >>> stats = AccessLog.objects.stats(content_type)
+    >>> stats
+    {1: {'content_type': 29, 'count': 5}, 3: {'content_type': 29, 'count': 8}}
+
+The sample output above shows model instance with ``pk`` value of 3 has been accessed 8 times through the decorated view function.
 
 ## HTML Docs
 

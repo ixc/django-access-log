@@ -5,10 +5,12 @@ Views for ``access_log`` app.
 # Do not use generic class based views unless there is a really good reason to.
 # Functional views are much easier to comprehend and maintain.
 
+from django.contrib.auth.decorators import user_passes_test
 from django.template.response import TemplateResponse
 from .models import AccessLog
 
 
+@user_passes_test(lambda u: u.is_staff)
 def downloads(request, content_type, object_id=None):
     downloads = AccessLog.objects.filter(content_type=content_type)
     if object_id:
