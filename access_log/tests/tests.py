@@ -51,9 +51,8 @@ class Models(WebTest):
                                                model=self.logged_model)
         decorated_func(request, pk=obj.pk)
 
-        log_entry = models.AccessLog.objects.get(pk=1)
+        log_entry = models.AccessLog.objects.get(object_id=obj.pk)
         self.assertEqual(log_entry.user, self.user)
-        self.assertEqual(log_entry.object_id, obj.pk)
 
 
 class Views(WebTest):
